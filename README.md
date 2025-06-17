@@ -6,7 +6,7 @@ This app is built using docker with multistage build.
 
 # SETUP
 
-For local dev, assuming you already have a database installed, just wire up the environment variable
+For local dev, assuming you already have a database installed, just wire up the environment variables.
 
 ```.text
 DB=
@@ -16,44 +16,6 @@ POSTGRES_PASSWORD=
 DB_PORT=
 FORCE_SSL=
 ```
-
-Create an application from console
-```ruby
-Doorkeeper::Application.create!(
-  name:         "Client",
-  redirect_uri: "https://oauth.pstmn.io/v1/callback", # for development with postman
-  scopes:       "public web"
-)
-```
-
-Setup devise user module as needed in `models/user.rb`
-```ruby
-class User < ApplicationRecord
-    devise :database_authenticatable, :registerable,
-           :recoverable, :rememberable, :validatable,
-           :confirmable, :lockable, :trackable
-
-    enum role: { user: 0, admin: 1 }
-
-    has_many :oauth_access_grants,
-             class_name: 'Doorkeeper::AccessGrant',
-             foreign_key: :resource_owner_id,
-             dependent: :delete_all
-
-    has_many :oauth_access_tokens,
-             class_name: 'Doorkeeper::AccessToken',
-             foreign_key: :resource_owner_id,
-             dependent: :delete_all
-end
-```
-
-Init a sample user
-```ruby
-User.create(email: "user@example.com", password: "password")
-```
-
-
-# POSTMAN SETUP
 
 On postman authorization tab, configure the setting as shown below.
 
@@ -176,3 +138,47 @@ EOSQL
 done
 
 ```
+
+# RAILS SETUP
+
+Do the usual setup first like migration and seeding.
+
+
+Create an application from console
+```ruby
+Doorkeeper::Application.create!(
+  name:         "Client",
+  redirect_uri: "https://oauth.pstmn.io/v1/callback", # for development with postman
+  scopes:       "public web"
+)
+```
+
+Setup devise user module as needed in `models/user.rb`
+```ruby
+class User < ApplicationRecord
+    devise :database_authenticatable, :registerable,
+           :recoverable, :rememberable, :validatable,
+           :confirmable, :lockable, :trackable
+
+    enum role: { user: 0, admin: 1 }
+
+    has_many :oauth_access_grants,
+             class_name: 'Doorkeeper::AccessGrant',
+             foreign_key: :resource_owner_id,
+             dependent: :delete_all
+
+    has_many :oauth_access_tokens,
+             class_name: 'Doorkeeper::AccessToken',
+             foreign_key: :resource_owner_id,
+             dependent: :delete_all
+end
+```
+
+Init a sample user
+```ruby
+User.create(email: "user@example.com", password: "password")
+```
+
+# TODO
+This only covers the basic.
+Other features like recoverable, rememberable, validatable, confirmable, lockable, trackable is not yet implemented.
