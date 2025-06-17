@@ -1,4 +1,4 @@
-# app/controllers/users/sessions_controller.rb
-class Users::SessionsController < Devise::SessionsController
+# app/controllers/user/session_controller.rb
+class User::SessionController < Devise::SessionsController
     layout "application"
 end
